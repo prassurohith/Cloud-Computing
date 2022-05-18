@@ -1,5 +1,14 @@
 Implementing Solutions on Microsoft Azure Cloud Platform (AZ-900/AZ-104/AZ-303)
 =================================================================================
+Azure Hierarchy:
+----------------
+1.when u create micro soft account u will get one Tenant ID. its default for all microsoft products.  --->>LEVEL-1
+2.Micro Soft Azure Cloud ---------->>> LEVEL-2
+3.Micro Soft Azure Subscriptions ---------->>> LEVEL-3
+- In General you will be creating Subscriptions. 
+4.Azure Resource Groups ------------>>>LEVEL-4
+5.Resources (VMS, Networks, Storage etc) ---------->>>LEVEL-5. 
+
 Azure Course Curriculum
 =========================
 Introduction to Azure
