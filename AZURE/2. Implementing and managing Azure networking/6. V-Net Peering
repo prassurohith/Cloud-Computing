@@ -1,0 +1,13 @@
+Virtual network peering:
+========================
+- Virtual network peering enables you to seamlessly connect two or more Virtual Networks in Azure. 
+- The virtual networks appear as one for connectivity purposes.
+- Azure supports the following types of peering:
+. Virtual network peering: Connect virtual networks within the same Azure region.
+. Global virtual network peering: Connecting virtual networks across Azure regions.
+
+Network traffic between peered virtual networks is private. Traffic between the virtual networks is kept on the Microsoft backbone network. 
+No public Internet, gateways, or encryption is required in the communication between the virtual networks.
+
+
+
