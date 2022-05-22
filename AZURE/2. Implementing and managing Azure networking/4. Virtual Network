@@ -1,0 +1,36 @@
+Virtual Network:
+================
+- Azure Virtual Network (VNet) is the fundamental building block for your private network in Azure. 
+- VNet enables many types of Azure resources, such as Azure Virtual Machines (VM), to securely 
+  communicate with each other, the internet, and on-premises networks.
+
+1.Create a virtual network:
+---------------------------
+1. Select Create a resource in the upper left-hand corner of the portal.
+
+2. In the search box, enter Virtual Network. Select Virtual Network in the search results.
+
+3. In the Virtual Network page, select Create.
+
+4. In Create virtual network, enter or select this information in the Basics tab:
+
+5. Select the IP Addresses tab, or select the Next: IP Addresses button at the bottom of the page.
+
+6.In IPv4 address space, select the existing address space and change it to 10.1.0.0/16.
+
+7. Select + Add subnet, then enter MySubnet for Subnet name and 10.1.0.0/24 for Subnet address range.
+
+8. Select Add.
+
+9. Select the Security tab, or select the Next: Security button at the bottom of the page.
+
+10. Select the Review + create tab or select the Review + create button.
+
+11. Select Create.
+
+
+
+2. Create a Virtual Network Using Azure CLI:
+---------------------------------------------
+# az network vnet create --name myVNet --resource-group CreateVNetQS-rg --subnet-name default
+
