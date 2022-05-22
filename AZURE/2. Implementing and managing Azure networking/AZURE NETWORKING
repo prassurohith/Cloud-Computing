@@ -66,6 +66,75 @@ module "vnet" {
 
 2. Azure Virtual Subnets:
 -------------------------
+- Subnets: Subnets enable you to segment the virtual network into one or more sub-networks and allocate a portion of the virtual network's 
+  address space to each subnet. You can then deploy Azure resources in a specific subnet.
+
+Create Subnets:
+---------------
+2.1. Create a Subnet Using GUI:
+---------------------------------
+1. Go to the Azure portal to view your virtual networks. Search for and select Virtual networks.
+2. Select the name of the virtual network you want to add a subnet to.
+3. From Settings, select Subnets > Subnet.
+4. In the Add subnet dialog box, enter values for the following settings:
+5. To add the subnet to the virtual network that you selected, select OK.
+
+2.2. Using Azure Cli:
+-----------------------
+RG Create:
+# az group create --name CreateVNetQS-rg --location eastus
+VNet Create:
+# az network vnet create --name myVNet --resource-group CreateVNetQS-rg --subnet-name default
+
+2.3. Using Terraform:
+------------------------
+provider "azurerm" {
+  features {}
+}
+
+resource "azurerm_resource_group" "example" {
+  name     = "my-resources"
+  location = "West Europe"
+}
+
+module "vnet" {
+  source              = "Azure/vnet/azurerm"
+  resource_group_name = azurerm_resource_group.example.name
+  address_space       = ["10.0.0.0/16"]
+  subnet_prefixes     = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
+  subnet_names        = ["subnet1", "subnet2", "subnet3"]
+
+  subnet_service_endpoints = {
+    subnet2 = ["Microsoft.Storage", "Microsoft.Sql"],
+    subnet3 = ["Microsoft.AzureActiveDirectory"]
+  }
+
+  tags = {
+    environment = "dev"
+    costcenter  = "it"
+  }
+
+  depends_on = [azurerm_resource_group.example]
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
