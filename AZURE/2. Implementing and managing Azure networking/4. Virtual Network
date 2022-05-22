@@ -34,3 +34,31 @@ Virtual Network:
 ---------------------------------------------
 # az network vnet create --name myVNet --resource-group CreateVNetQS-rg --subnet-name default
 
+
+
+
+2.Azure Subnet:
+=================
+
+- As we know, the subnet is a part of a network that covers a range of IP Address. 
+  In Azure, VNet can be divided into smaller subnets for organizations. 
+  When a VNet is created in Azure, the subnet range and topology needs to be specified. 
+  In Subnet, the IP Address range will be a subpart from a big block of IP Address used 
+  in Virtual Network (VNet). The Virtual Machines and resources in a network will be assigned 
+  the IP Address from these subnets.
+  
+  
+Create Subnetwork using Azure Portal:
+---------------------------------------
+1. Go to the Azure portal to view your virtual networks. Search for and select Virtual networks.
+2. Select the name of the virtual network you want to add a subnet to.
+3. From Settings, select Subnets > Subnet.
+4. In the Add subnet dialog box, enter values for the following settings:
+5. To add the subnet to the virtual network that you selected, select OK.
+
+
+Create Subnet using Azure Cli:
+--------------------------------
+# az network vnet create --name myVNet --resource-group CreateVNetQS-rg --subnet-name default
+
+
