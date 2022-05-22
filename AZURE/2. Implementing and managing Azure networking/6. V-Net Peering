@@ -4,10 +4,45 @@ Virtual network peering:
 - The virtual networks appear as one for connectivity purposes.
 - Azure supports the following types of peering:
 . Virtual network peering: Connect virtual networks within the same Azure region.
+---------------------------
 . Global virtual network peering: Connecting virtual networks across Azure regions.
+---------------------------------
+. In Real World  Hub-And-Spoke Architecture is using. 
 
 Network traffic between peered virtual networks is private. Traffic between the virtual networks is kept on the Microsoft backbone network. 
 No public Internet, gateways, or encryption is required in the communication between the virtual networks.
+
+
+1. Create a peering:
+---------------------
+1.  In the search box at the top of the Azure portal, enter Virtual networks in the search box. 
+    When Virtual networks appear in the search results, select it. Don't select Virtual networks (classic), 
+    as you can't create a peering from a virtual network deployed through the classic deployment model.
+  
+2. Select the virtual network in the list that you want to create a peering for.
+
+3. Select Peerings under Settings and then select + Add.
+
+4. Enter or select values for the following settings:
+
+5. Select Add to configure the peering to the virtual network you selected. After a few seconds, 
+   select the Refresh button and the peering status will change from Updating to Connected.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
