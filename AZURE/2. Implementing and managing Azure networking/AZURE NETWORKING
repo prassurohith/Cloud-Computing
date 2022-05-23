@@ -3,185 +3,113 @@ AZURE NETWORKING:
 ====>>  AZURE VIRTUAL NETWORK  ====>> AZURE SUBNET ====>> AZURE VNET PEEARING ====>> AZURE FIREWALL ======>> AZURE VIRTUAL NETWORK GATEWAY ====>> AZURE VIRTUAL MACHINES.
 ==========>> FOLLOW HUB-SPOKE-NETWORK-ARCH IN REAL WORLD  <<===========
 
-1.Azure Virtual Network:
-==========================
-- Azure VNet is similar to a traditional network that you'd operate in your own data center, 
-  but brings with it additional benefits of Azure's infrastructure such as scale, availability, and isolation.
+
+AZURE VIRTUAL NETWORK:
+======================
+1. What is Azure Virtual Network?
+------------------------------
+- Azure Virtual Network (VNet) is the fundamental building block for your private network in Azure. 
+- VNet enables many types of Azure resources, such as Azure Virtual Machines (VM), to securely 
+  communicate with each other, the internet, and on-premises networks. 
+- VNet is similar to a traditional network that you'd operate in your own data center, but brings with 
+  it additional benefits of Azure's infrastructure such as scale, availability, and isolation.
   
-Create:
--------
-1.1. Using Azure Portal:
---------------------------
-1. Select Create a resource in the upper left-hand corner of the portal.
-2. In the search box, enter Virtual Network. Select Virtual Network in the search results.
-3. In the Virtual Network page, select Create.
-4. In Create virtual network, enter or select this information in the Basics tab.
-5. Select the IP Addresses tab, or select the Next: IP Addresses button at the bottom of the page.
-6. In IPv4 address space, select the existing address space and change it to 10.1.0.0/16.
-7. Select + Add subnet, then enter MySubnet for Subnet name and 10.1.0.0/24 for Subnet address range.
-8. Select Add.
-9. Select the Security tab, or select the Next: Security button at the bottom of the page.
-10. Under BastionHost, select Enable. Enter this information:
-11. Select the Review + create tab or select the Review + create button.
-12. Select Create.
-
-
-1.2. Using Azure Cli:
------------------------
-RG Create:
-# az group create --name CreateVNetQS-rg --location eastus
-VNet Create:
-# az network vnet create --name myVNet --resource-group CreateVNetQS-rg --subnet-name default
-
-1.3. Using Terraform:
-------------------------
-provider "azurerm" {
-  features {}
-}
-
-resource "azurerm_resource_group" "example" {
-  name     = "my-resources"
-  location = "West Europe"
-}
-
-module "vnet" {
-  source              = "Azure/vnet/azurerm"
-  resource_group_name = azurerm_resource_group.example.name
-  address_space       = ["10.0.0.0/16"]
-  subnet_prefixes     = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
-  subnet_names        = ["subnet1", "subnet2", "subnet3"]
-
-  subnet_service_endpoints = {
-    subnet2 = ["Microsoft.Storage", "Microsoft.Sql"],
-    subnet3 = ["Microsoft.AzureActiveDirectory"]
-  }
-
-  tags = {
-    environment = "dev"
-    costcenter  = "it"
-  }
-
-  depends_on = [azurerm_resource_group.example]
-}
-
-
-
-2. Azure Virtual Subnets:
--------------------------
-- Subnets: Subnets enable you to segment the virtual network into one or more sub-networks and allocate a portion of the virtual network's 
-  address space to each subnet. You can then deploy Azure resources in a specific subnet.
-
-Create Subnets:
----------------
-2.1. Create a Subnet Using GUI:
----------------------------------
-1. Go to the Azure portal to view your virtual networks. Search for and select Virtual networks.
-2. Select the name of the virtual network you want to add a subnet to.
-3. From Settings, select Subnets > Subnet.
-4. In the Add subnet dialog box, enter values for the following settings:
-5. To add the subnet to the virtual network that you selected, select OK.
-
-2.2. Using Azure Cli:
------------------------
-RG Create:
-# az group create --name CreateVNetQS-rg --location eastus
-VNet Create:
-# az network vnet create --name myVNet --resource-group CreateVNetQS-rg --subnet-name default
-
-2.3. Using Terraform:
-------------------------
-provider "azurerm" {
-  features {}
-}
-
-resource "azurerm_resource_group" "example" {
-  name     = "my-resources"
-  location = "West Europe"
-}
-
-module "vnet" {
-  source              = "Azure/vnet/azurerm"
-  resource_group_name = azurerm_resource_group.example.name
-  address_space       = ["10.0.0.0/16"]
-  subnet_prefixes     = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
-  subnet_names        = ["subnet1", "subnet2", "subnet3"]
-
-  subnet_service_endpoints = {
-    subnet2 = ["Microsoft.Storage", "Microsoft.Sql"],
-    subnet3 = ["Microsoft.AzureActiveDirectory"]
-  }
-
-  tags = {
-    environment = "dev"
-    costcenter  = "it"
-  }
-
-  depends_on = [azurerm_resource_group.example]
-}
-
-
-3. V-NET Peearing:
--------------------
-- Virtual network peering enables you to seamlessly connect two or more Virtual Networks in Azure.
-
-Create V-NEt Peearings:
-------------------------
-3.1. Using Aure GUI:
---------------------
-1. In the search box at the top of the Azure portal, enter Virtual networks in the search box. When Virtual networks appear in the search
-   results, select it. Don't select Virtual networks (classic), as you can't create a peering from a virtual network deployed through the classic deployment model.
-2. Select the virtual network in the list that you want to create a peering for.
-3. Select Peerings under Settings and then select + Add.
-4. Enter or select values for the following settings:
-5. Select Add to configure the peering to the virtual network you selected. After a few seconds, select the Refresh button and the peering status 
-   will change from Updating to Connected.
-
-3.2. Using Azure Cli:
-----------------------
-vNet Peering Create:
-# az network vnet peering create -g MyResourceGroup -n MyVnet1ToMyVnet2 --vnet-name MyVnet1 --remote-vnet MyVnet2Id --allow-vnet-access
-
-3.3. Using Terraform:
----------------------
-resource "azurerm_resource_group" "example" {
-  name     = "peeredvnets-rg"
-  location = "West Europe"
-}
-
-resource "azurerm_virtual_network" "example-1" {
-  name                = "peternetwork1"
-  resource_group_name = azurerm_resource_group.example.name
-  address_space       = ["10.0.1.0/24"]
-  location            = azurerm_resource_group.example.location
-}
-
-resource "azurerm_virtual_network" "example-2" {
-  name                = "peternetwork2"
-  resource_group_name = azurerm_resource_group.example.name
-  address_space       = ["10.0.2.0/24"]
-  location            = azurerm_resource_group.example.location
-}
-
-resource "azurerm_virtual_network_peering" "example-1" {
-  name                      = "peer1to2"
-  resource_group_name       = azurerm_resource_group.example.name
-  virtual_network_name      = azurerm_virtual_network.example-1.name
-  remote_virtual_network_id = azurerm_virtual_network.example-2.id
-}
-
-resource "azurerm_virtual_network_peering" "example-2" {
-  name                      = "peer2to1"
-  resource_group_name       = azurerm_resource_group.example.name
-  virtual_network_name      = azurerm_virtual_network.example-2.name
-  remote_virtual_network_id = azurerm_virtual_network.example-1.id
-}
-
-
-
-4. Azure Virtual Network GateWay:
+2. Why use an Azure Virtual network?
 ------------------------------------
+- Azure virtual network enables Azure resources to securely communicate with each other, the internet, and on-premises networks. 
+- Key scenarios that you can accomplish with a virtual network include - communication of Azure resources with the internet, 
+  communication between Azure resources, communication with on-premises resources, filtering network traffic, routing network 
+  traffic, and integration with Azure services.
+  
+3. Communicate with the internet:
+---------------------------------
+- All resources in a VNet can communicate outbound to the internet, by default. 
+- You can communicate inbound to a resource by assigning a public IP address or a public Load Balancer. 
+- You can also use public IP or public Load Balancer to manage your outbound connections. 
+
+4. Communicate between Azure resources:
+----------------------------------------
+Azure resources communicate securely with each other in one of the following ways:
+
+Through a virtual network: 
+...........................
+- You can deploy VMs, and several other types of Azure resources to a virtual network, such as Azure App Service Environments, 
+  the Azure Kubernetes Service (AKS), and Azure Virtual Machine Scale Sets.
+
+Through a virtual network service endpoint: 
+............................................
+- Extend your virtual network private address space and the identity of your virtual network to Azure service resources, 
+  such as Azure Storage accounts and Azure SQL Database, over a direct connection. Service endpoints allow you to secure
+  
+Through VNet Peering:
+......................
+- You can connect virtual networks to each other, enabling resources in either virtual network to communicate with each other, 
+  using virtual network peering. The virtual networks you connect can be in the same, or different, Azure regions. 
+
+5. Communicate with on-premises resources:
+-------------------------------------------
+- You can connect your on-premises computers and networks to a virtual network using any combination of the following options:
+
+Point-to-site virtual private network (VPN): 
+............................................
+- Established between a virtual network and a single computer in your network. 
+- Each computer that wants to establish connectivity with a virtual network must configure its connection.  
+- The communication between your computer and a virtual network is sent through an encrypted tunnel over the internet.
+
+Site-to-site VPN: 
+-----------------
+- Established between your on-premises VPN device and an Azure VPN Gateway that is deployed in a virtual network. 
+- This connection type enables any on-premises resource that you authorize to access a virtual network. 
+- The communication between your on-premises VPN device and an Azure VPN gateway is sent through an encrypted tunnel over the internet.
+
+Azure ExpressRoute: 
+--------------------
+- Established between your network and Azure, through an ExpressRoute partner. This connection is private. Traffic does not go over the internet. 
 
 
+6. Filter network traffic:
+---------------------------
+- You can filter network traffic between subnets using either or both of the following options:
+
+Network security groups: 
+.........................
+- Network security groups and application security groups can contain multiple inbound and outbound security rules that 
+  enable you to filter traffic to and from resources by source and destination IP address, port, and protocol. 
+  
+Network virtual appliances: FIREWALLS 
+...........................
+- A network virtual appliance is a VM that performs a network function, such as a firewall, WAN optimization, or other network function. 
+
+
+7. Route network traffic:
+---------------------------
+- Azure routes traffic between subnets, connected virtual networks, on-premises networks, and the Internet, by default
+
+Route tables: You can create custom route tables with routes that control where traffic is routed to for each subnet.
+--------------
+
+8. Virtual network integration for Azure services:
+--------------------------------------------------
+- Integrating Azure services to an Azure virtual network enables private access to the service from virtual machines or compute resources in the virtual network.
+
+9.Azure VNet limits:
+----------------------
+- There are certain limits around the number of Azure resources you can deploy. Most Azure networking limits are at the maximum values. 
+  However, you can increase certain networking limits as specified on the VNet limits page
+
+10. Virtual networks and availability zones:
+-----------------------------------------------
+- Virtual networks and subnets span all availability zones in a region. 
+- You don't need to divide them by availability zones to accommodate zonal resources. 
+For example, if you configure a zonal VM, you don't have to take into consideration the virtual network when selecting the availability zone for the VM. 
+The same is true for other zonal resources
+
+
+11.Pricing:
+-----------
+- There is no charge for using Azure VNet; it is free of cost. 
+- Standard charges are applicable for resources, such as Virtual Machines (VMs) and other products. 
+- To learn more, see VNet pricing and the Azure pricing calculator.
 
 
 
