@@ -1,5 +1,7 @@
 AZURE NETWORKING:
 ======================
+====>>  AZURE VIRTUAL NETWORK  ====>> AZURE SUBNET ====>> AZURE VNET PEEARING ====>> AZURE FIREWALL ======>> AZURE VIRTUAL NETWORK GATEWAY ====>> AZURE VIRTUAL MACHINES.
+==========>> FOLLOW HUB-SPOKE-NETWORK-ARCH IN REAL WORLD  <<===========
 
 1.Azure Virtual Network:
 ==========================
@@ -176,18 +178,10 @@ resource "azurerm_virtual_network_peering" "example-2" {
 
 
 
-4. Azure Firewall:
---------------------
-- What is Azure Firewall?
+4. Azure Virtual Network GateWay:
+------------------------------------
 
-. Azure Firewall is a cloud-native and intelligent network firewall security service that provides the best of breed threat protection for your 
-  cloud workloads running in Azure. It's a fully stateful, firewall as a service with built-in high availability and unrestricted cloud scalability. 
-  It provides both east-west and north-south traffic inspection.
-  
- 2 Types:
- ---------
- - Azure Firewall Standard.
- - Azure Firewall Premium.
+
 
 
 
