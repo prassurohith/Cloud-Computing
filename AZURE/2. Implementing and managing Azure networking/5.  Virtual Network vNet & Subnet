@@ -4,10 +4,12 @@ VIRTUAL NETWORK:
 - Azure Virtual Network (VNet) is the fundamental building block for your private network in Azure. 
 - VNet enables many types of Azure resources, such as Azure Virtual Machines (VM), to securely 
   communicate with each other, the internet, and on-premises networks.
-  
  
-CREATE VNET:
--------------
+ Subnet: Subnet is a logical network of a virtual network.
+ -------
+ 
+CREATE VNET & Subnet:
+---------------------
 1. Using Azure Portal:
 ----------------------
 1. Select Create a resource in the upper left-hand corner of the portal.
