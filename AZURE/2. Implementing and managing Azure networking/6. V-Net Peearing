@@ -1,4 +1,108 @@
 VNET PEERING:
-============
+==============
+ Virtual network peering:
+ --------------------------
+- Virtual network peering enables you to seamlessly connect two or more Virtual Networks in Azure. 
+- The virtual networks appear as one for connectivity purposes. The traffic between virtual machines 
+  in peered virtual networks uses the Microsoft backbone infrastructure. 
 
+1. Azure supports the following types of peering:
+--------------------------------------------------
+Virtual network peering: Connect virtual networks within the same Azure region.
+Global virtual network peering: Connecting virtual networks across Azure regions.
+
+Network traffic between peered virtual networks is private.No public Internet, gateways, or encryption is required in the communication between the virtual networks.
+
+You can apply network security groups in either virtual network to block access to other virtual networks or subnets. 
+When configuring virtual network peering, either open or close the network security group rules between the virtual networks. 
+If you open full connectivity between peered virtual networks, you can apply network security groups to block or deny specific access. 
+Full connectivity is the default option.
+
+2. Gateways and on-premises connectivity:
+------------------------------------------
+- Each virtual network, including a peered virtual network, can have its own gateway. 
+  A virtual network can use its gateway to connect to an on-premises network. 
+  You can also configure virtual network-to-virtual network connections by using gateways, even for peered virtual networks.
+  
+
+
+
+3. Create V-NET Peearing:
+---------------------------
+
+Using Azure Portal:
+----------------------
+1. In the search box at the top of the Azure portal, enter Virtual networks in the search box. 
+   When Virtual networks appear in the search results, select it. Don't select Virtual networks (classic), 
+   as you can't create a peering from a virtual network deployed through the classic deployment model.
+
+2. Select the virtual network in the list that you want to create a peering for.
+
+3. Select Peerings under Settings and then select + Add.
+
+4. Enter or select values for the following settings:
+
+5. Select Add to configure the peering to the virtual network you selected. After a few seconds, select the Refresh button 
+   and the peering status will change from Updating to Connected.
+
+
+Using Terraform:
+-----------------
+
+resource "azurerm_resource_group" "example" {
+  name     = "peeredvnets-rg"
+  location = "West Europe"
+}
+
+resource "azurerm_virtual_network" "example-1" {
+  name                = "peternetwork1"
+  resource_group_name = azurerm_resource_group.example.name
+  address_space       = ["10.0.1.0/24"]
+  location            = azurerm_resource_group.example.location
+}
+
+resource "azurerm_virtual_network" "example-2" {
+  name                = "peternetwork2"
+  resource_group_name = azurerm_resource_group.example.name
+  address_space       = ["10.0.2.0/24"]
+  location            = azurerm_resource_group.example.location
+}
+
+resource "azurerm_virtual_network_peering" "example-1" {
+  name                      = "peer1to2"
+  resource_group_name       = azurerm_resource_group.example.name
+  virtual_network_name      = azurerm_virtual_network.example-1.name
+  remote_virtual_network_id = azurerm_virtual_network.example-2.id
+}
+
+resource "azurerm_virtual_network_peering" "example-2" {
+  name                      = "peer2to1"
+  resource_group_name       = azurerm_resource_group.example.name
+  virtual_network_name      = azurerm_virtual_network.example-2.name
+  remote_virtual_network_id = azurerm_virtual_network.example-1.id
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Troubleshoot VnetPeearing:
+---------------------------
+To confirm that virtual networks are peered, you can check effective routes. 
+Check routes for a network interface in any subnet in a virtual network. 
+If a virtual network peering exists, all subnets within the virtual network have routes with next hop type VNet peering, 
+for each address space in each peered virtual network.
+
+You can also troubleshoot connectivity to a virtual machine in a peered virtual network using Azure Network Watcher. 
+A connectivity check lets you see how traffic is routed from a source virtual machine's network interface to a 
+destination virtual machine's network interface. For more information, see Troubleshoot connections with Azure Network Watcher using the Azure portal.     
 
